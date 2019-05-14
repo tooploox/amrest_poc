@@ -1,0 +1,10 @@
+flake8==3.7.6
+jupyterlab==0.35.4
+numpy==1.14.5
+pandas==0.24.1
+matplotlib==3.0.3
+py==1.7.0
+pycodestyle==2.5.0
+pyflakes==2.1.0
+pytest==4.3.0
+seaborn==0.9.0
