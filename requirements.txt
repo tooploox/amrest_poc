@@ -3,6 +3,9 @@ jupyterlab==0.35.4
 numpy==1.14.5
 pandas==0.24.1
 matplotlib==3.0.3
+mlxtend
+dask[complete]
+google-cloud-bigquery[pandas]
 py==1.7.0
 pycodestyle==2.5.0
 pyflakes==2.1.0

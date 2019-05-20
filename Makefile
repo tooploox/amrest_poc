@@ -1,41 +1,46 @@
 .PHONY: clean lint test test-debug
 
 #################################################################################
-# DOCKER RELATED COMMANDS                                                                #
+# DOCKER RELATED COMMANDS                                                       #
 #################################################################################
 
-IMAGE_NAME=ds-campaign-cost-optimization
+IMAGE_NAME=amrest_poc
+DATA_PATH=/home/datasets/backup/askorupa/data/
+INSIDE_DATA_PATH=/data/amrest/
+
 ifeq ($(PORT),)
 	PORT=8000
 endif
 
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker build -t $(USER)_$(IMAGE_NAME) .
 
 dev:
 	docker run --rm -ti -p $(PORT):$(PORT) \
-    --name $(USER)_dev \
-    -v $(PWD)/:/$(IMAGE_NAME) \
-    -v $(G9_DATA_PATH):/data \
-    -w="/$(IMAGE_NAME)" \
-    -e GOOGLE_APPLICATION_CREDENTIALS=/data/$(IMAGE_NAME)/secrets/gcloud_credentials.json \
-    -e G9_DATA_PATH=/data \
-    -e PROJECT_NAME=$(IMAGE_NAME) \
-    $(IMAGE_NAME)
-
+    --name $(USER)_$(IMAGE_NAME)_dev \
+    -v $(PWD)/:/project \
+    -v /home/$(USER)/:/home \
+    -v $(DATA_PATH):/data \
+    -w="/project" \
+    -e DATA_PATH=$(INSIDE_DATA_PATH) \
+    $(USER)_$(IMAGE_NAME)
 
 lab:
 	docker run --rm -ti -p $(PORT):$(PORT) \
-    --name $(USER)_lab \
-    -v $(PWD)/:/$(IMAGE_NAME) \
-    -v $(G9_DATA_PATH):/data/ \
-	-w="/$(IMAGE_NAME)" \
-	-e GOOGLE_APPLICATION_CREDENTIALS=/data/$(IMAGE_NAME)/secrets/gcloud_credentials.json \
-	-e G9_DATA_PATH=/data \
-    -e PROJECT_NAME=$(IMAGE_NAME) \
-	$(IMAGE_NAME) \
+    --name $(USER)_$(IMAGE_NAME)_lab \
+    -v $(PWD)/:/project \
+    -v /home/$(USER)/:/home \
+    -v $(DATA_PATH):/data \
+    -w="/project" \
+    -e DATA_PATH=$(INSIDE_DATA_PATH) \
+	$(USER)_$(IMAGE_NAME) \
 	jupyter lab --ip 0.0.0.0 --port $(PORT) --no-browser --allow-root
 
+kill_dev:
+	docker kill $(USER)_$(IMAGE_NAME)_dev; docker rm $(USER)_dev
+
+kill_lab:
+	docker kill $(USER)_$(IMAGE_NAME)_lab; docker rm $(USER)_lab
 
 #################################################################################
 # OTHER COMMANDS                                                                #
